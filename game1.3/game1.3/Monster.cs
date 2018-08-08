@@ -8,8 +8,8 @@ namespace game1._3
 {
     class Monster
     {
-        public static int level=1;
-        public int hp = 19 + level;
+        public static int level=0;
+        public int hp = 20 + level;
         public int damage;
         public string name;
         public bool isalive = true;

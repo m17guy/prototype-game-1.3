@@ -10,7 +10,7 @@ namespace game1._3
     {
         public static int level = 1;
         public int hp = 40;
-        public int damage;
+        //public int damage; to see if needed
         public int potin = 0;
         public int job = 0;
         //more like wepon im i right

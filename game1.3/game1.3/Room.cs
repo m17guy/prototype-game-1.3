@@ -9,14 +9,18 @@ namespace game1._3
     class Room
     {
         public double location;
-        public bool potion = false;
-        public bool weaponSword = false;
-        public bool weaponStaff = false;
-        public bool weaponBow = false;
-        public string d;
-        public void getWepon(Player me, int couse)
+        public bool monster;
+        public bool potion;
+        public bool weaponSword;
+        public bool weaponStaff;
+        public bool weaponBow;
+        public bool doorNorth;
+        public bool doorEast;
+        public bool doorSouth;
+        public bool doorWest;
+        public void getWepon(Player me, int choice)
         {
-            switch (couse)
+            switch (choice)
             {
                 case 1:
                     switch(me.job)
@@ -30,9 +34,9 @@ namespace game1._3
                             weaponStaff = true;
                             break;
                     }
-                    Console.WriteLine("you then pick up the sword, it feels natural in your hands");
+                    Console.WriteLine("you pick up the sword, it feels natural in your hands");
                     weaponSword = false;
-                    me.job = couse;
+                    me.job = choice;
                     break;
                 case 2:
                     switch (me.job)
@@ -48,7 +52,7 @@ namespace game1._3
                     }
                     Console.WriteLine("you then pick up the bow, it feels natural in your hands");
                     weaponBow = false;
-                    me.job = couse;
+                    me.job = choice;
                     break;
                 case 3:
                     switch (me.job)
@@ -62,35 +66,33 @@ namespace game1._3
                             weaponSword = true;
                             break;
                     }
-                    Console.WriteLine("you then pick up the staff, it feels natural in your hands");
+                    Console.WriteLine("you pick up the staff, it feels natural in your hands");
                     weaponStaff = false;
-                    me.job = couse;
+                    me.job = choice;
                     break;
 
 
             }
         }
-        public void discription(Player me)
+        public void discription(Player me) //(x,y)
         {
+            //the player parameter if for diferent jobs
             switch (location)
             {
                 case (-1.1):
-                    {
-                        Console.WriteLine("You find yourself on a pile rubble. Your head hurts as if you've hit it,");
+                        Console.WriteLine("You find yourself on a pile rubble. Your head hurts as if it's been hit");
                         Console.WriteLine("you can't quite remember where you are or why.");
-                        Console.WriteLine("on the north wall of this room is a door, to its right in the corner is a sword.");
+                        Console.WriteLine("in separate corners of the room are a sword, a bow and a staff.");
+                        weaponBow = true; weaponStaff = true; weaponSword = true;
+                        doorNorth = true;
                         break;
-                    }
                 case (1):
-                    {
                         Console.WriteLine("As you cross the doors threshold you see a skeleton shambling across");
                         Console.WriteLine("the room you enterd. He is walking so slowly you let yourself look around the");
                         Console.WriteLine("room, it's so sparse you have nothing to do here but attack him.");
-                        Console.WriteLine("there is a door to the north, south and west");
-                        break;
-                    }
+                        doorNorth = true; doorWest = true; doorSouth = true; //monster = true;
+                    break;
                 case (1.1):
-                    {
                         Console.WriteLine("This room is so crowded with rubble you can barely see the floor.");
                         Console.WriteLine("The east wall looks as if it were a loose collection of debris seeming");
                         Console.WriteLine("to be held up by a sort of magic,");
@@ -100,55 +102,66 @@ namespace game1._3
                             Console.WriteLine("you do not have a spell to stop it");
                         }
                         Console.WriteLine("one of the piles on the floor seems to have something red underneath it");
-                        //Console.WriteLine("it's a closed bottle, you recognize it as a health potion");     to be implomented
-                        Console.WriteLine("there is a door to the south");
-                        break;
-                    }
+                    //Console.WriteLine("it's a closed bottle, you recognize it as a health potion");     to be implomented
+                    doorSouth = true;
+                    break;
                 case (0):
-                    {
+                        Console.WriteLine("room 0");
                         Console.WriteLine();
                         Console.WriteLine();
                         Console.WriteLine();
-                        Console.WriteLine();
+                        doorNorth = true; doorEast = true;
                         break;
-                    }
                 case (0.1):
-                    {
+                        Console.WriteLine("room 0.1");
                         Console.WriteLine();
                         Console.WriteLine();
                         Console.WriteLine();
-                        Console.WriteLine();
-                        break;
-                    }
+                        doorNorth = true; doorSouth = true;
+                    break;
                 case (0.2):
-                    {
+                        Console.WriteLine("room 0.2");
                         Console.WriteLine();
                         Console.WriteLine();
                         Console.WriteLine();
-                        Console.WriteLine();
-                        break;
-                    }
+                        doorNorth = true; doorSouth = true;
+                    break;
                 case (0.3):
-                    {
-                        Console.WriteLine();
+                        Console.WriteLine("room 0.3");
+                        doorEast = true; doorSouth = true;
                         break;
-                    }
                 case (1.3):
-                    {
-                        Console.WriteLine();
+                        Console.WriteLine("room 1.3");
+                        doorEast = true; doorWest = true;
                         break;
-                    }
                 case (2.3):
-                    {
-                        Console.WriteLine();
+                        Console.WriteLine("room 2.3");
+                        doorNorth = true; doorSouth = true; doorWest = true;
                         break;
-                    }
                 case (2.2):
-                    {
-                        Console.WriteLine();
+                        Console.WriteLine("room 2.2");
+                        doorEast = true;
                         break;
-                    }
+                case 2.4:
+                    Console.WriteLine("room 2.4");
+                    doorSouth = true;
+                    break;
+                case 2.1:
+                    Console.WriteLine("room 2.1");
+                    doorWest = true;
+                    break;
             }
+        }
+        public void doors()
+        {
+            if (doorNorth == true)
+                Console.WriteLine("there is door to the north");
+            if (doorEast == true)
+                Console.WriteLine("there is door to the east");
+            if (doorSouth == true)
+                Console.WriteLine("there is door to the south");
+            if (doorWest == true)
+                Console.WriteLine("there is door to the west");
         }
     }
 }
