@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace game1._3
 {
@@ -10,7 +11,17 @@ namespace game1._3
     {
         static void Main(string[] args)
         {
-            Player guy = new Player(); //pleyer charecter
+            FileStream file = new FileStream("monster list.txt", FileMode.OpenOrCreate);
+            file.Close();//never forget to close the stream
+            //making the monsters
+            string[] monsterAtributs = File.ReadAllText("monster list.txt").Split('\n');
+            Monster test = new Monster();
+            test.name = monsterAtributs[0];
+            test.hp = Convert.ToInt32(monsterAtributs[1]);
+            test.isalive = Convert.ToBoolean(monsterAtributs[2]);
+            Console.WriteLine($"{test.name}\n{test.hp}\n{test.isalive}"); //works so far
+
+            Player guy = new Player(); //pleyer charecter ********* maybe to be made into a singelton
             //rooms:
             Room entrance = new Room();
             entrance.location = -1.1;
@@ -38,8 +49,8 @@ namespace game1._3
             intelroom.location = 2.4;
             bool tellroom = true;
             double myroom = -1.1;
-            double temp=100;
-            while (true)
+            double temp = 100;
+            for (int i = 0; i < 100; i++)
             {
                 if (tellroom)
                 {
@@ -122,7 +133,7 @@ namespace game1._3
                         temp = action(secretroom, guy);
                         break;
                 }
-                tellroom = (temp!=myroom);
+                tellroom = (temp != myroom);
                 myroom = temp;
             }
             Console.ReadKey();
@@ -144,16 +155,46 @@ namespace game1._3
             if (init.doorNorth == true && (a == "N" || a == "n"))
             {
                 if (temp == -1.1)
-                    temp += 2.1;
+                {
+                    temp *= 10;
+                    temp += 21;
+                    temp /= 10;
+                }
                 else
-                    temp += 0.1;
+                {
+                    temp *= 10;
+                    temp += 1;
+                    temp /= 10;
+                }
+
             }
             if (init.doorEast == true && (a == "E" || a == "e"))
-                temp += 1;
+            {
+                temp *= 10;
+                temp += 10;
+                temp /= 10;
+            }
             if (init.doorSouth == true && (a == "S" || a == "s"))
-                temp -= 0.1;
+            {
+                if (temp == 1)
+                {
+                    temp *= 10;
+                    temp -= 21;
+                    temp /= 10;
+                }
+                else
+                {
+                    temp *= 10;
+                    temp -= 1;
+                    temp /= 10;
+                }
+            }
             if (init.doorWest == true && (a == "W" || a == "w"))
-                temp -= 1;
+            {
+                temp *= 10;
+                temp -= 10;
+                temp /= 10;
+            }
             return temp;
         }
         static double action(Room init, Player guy)
@@ -412,7 +453,6 @@ namespace game1._3
                         }
                         break;
                     case (2.3):
-                        //boss room
                         switch (letsdo)
                         {
                             case "1":
@@ -437,6 +477,7 @@ namespace game1._3
                         }
                         break;
                     case (2.2):
+                        //boss room
                         switch (letsdo)
                         {
                             case "1":

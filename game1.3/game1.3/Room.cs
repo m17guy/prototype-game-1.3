@@ -140,7 +140,7 @@ namespace game1._3
                         break;
                 case (2.2):
                         Console.WriteLine("room 2.2");
-                        doorEast = true;
+                        doorEast = true; doorNorth = true;
                         break;
                 case 2.4:
                     Console.WriteLine("room 2.4");
