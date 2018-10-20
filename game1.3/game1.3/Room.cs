@@ -8,8 +8,8 @@ namespace game1._3
 {
     class Room
     {
-        public double location;
-        public bool monster;
+        public Monster Mhere;
+        public bool IsMonster;
         public bool potion;
         public bool weaponSword;
         public bool weaponStaff;
@@ -18,6 +18,7 @@ namespace game1._3
         public bool doorEast;
         public bool doorSouth;
         public bool doorWest;
+        public double location;
         public void getWepon(Player me, int choice)
         {
             switch (choice)
@@ -154,6 +155,7 @@ namespace game1._3
         }
         public void doors()
         {
+            //Console.WriteLine();
             if (doorNorth == true)
                 Console.WriteLine("there is door to the north");
             if (doorEast == true)

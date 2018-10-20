@@ -18,14 +18,18 @@ namespace game1._3
             Monster test = new Monster();
             test.name = monsterAtributs[0];
             test.hp = Convert.ToInt32(monsterAtributs[1]);
-            test.isalive = Convert.ToBoolean(monsterAtributs[2]);
-            Console.WriteLine($"{test.name}\n{test.hp}\n{test.isalive}"); //works so far
-
+            test.knows = Convert.ToBoolean(monsterAtributs[2]);
+            Console.WriteLine($"{test.name}\n{test.hp}\n{test.knows}"); //works so far
+            
+            
             Player guy = new Player(); //pleyer charecter ********* maybe to be made into a singelton
             //rooms:
             Room entrance = new Room();
             entrance.location = -1.1;
             Room combatitro = new Room();
+            //im only puting him here for testing perpeses
+            combatitro.Mhere = test;
+
             combatitro.location = 1;
             Room firstitem = new Room();
             firstitem.location = 1.1;
@@ -50,7 +54,7 @@ namespace game1._3
             bool tellroom = true;
             double myroom = -1.1;
             double temp = 100;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 150; i++)
             {
                 if (tellroom)
                 {
@@ -91,6 +95,9 @@ namespace game1._3
                             break;
                         case 2.1:
                             secretroom.discription(guy);
+                            break;
+                        default:
+                            Console.WriteLine("GAME OVER");
                             break;
                     }
                 }
@@ -136,6 +143,10 @@ namespace game1._3
                 tellroom = (temp != myroom);
                 myroom = temp;
             }
+            //small funny ending if it takes you too long
+            Console.WriteLine("you hear the walls shacking around you, theyre croumbling");
+            Console.WriteLine("rocks start faling on you, you should have seen this coming");
+            Console.WriteLine("GAME OVER");
             Console.ReadKey();
         }
         static void opdoors(Room init)
@@ -151,75 +162,149 @@ namespace game1._3
         }
         static double moveroom(string a, Room init)
         {
+            a = a.ToLower();
             double temp=init.location;
-            if (init.doorNorth == true && (a == "N" || a == "n"))
+            if (a == "n")
             {
-                if (temp == -1.1)
+                if (init.doorNorth == true)
+                {
+                    if (temp == -1.1)
+                    {
+                        temp *= 10;
+                        temp += 21;
+                        temp /= 10;
+                    }
+                    else
+                    {
+                        temp *= 10;
+                        temp += 1;
+                        temp /= 10;
+                    }
+                }
+                else
+                    Console.WriteLine("there is no door to the north");
+            }
+            if ( a == "e")
+            {
+                if (init.doorEast == true)
                 {
                     temp *= 10;
-                    temp += 21;
+                    temp += 10;
                     temp /= 10;
                 }
                 else
+                    Console.WriteLine("there is no door to the east");
+            }
+            if (a == "s")
+            {
+                if (init.doorSouth == true)
                 {
-                    temp *= 10;
-                    temp += 1;
-                    temp /= 10;
+                    if (temp == 1)
+                    {
+                        temp *= 10;
+                        temp -= 21;
+                        temp /= 10;
+                    }
+                    else
+                    {
+                        temp *= 10;
+                        temp -= 1;
+                        temp /= 10;
+                    }
                 }
-
+                else
+                    Console.WriteLine("there is no door to the south");
             }
-            if (init.doorEast == true && (a == "E" || a == "e"))
+            if (a == "w")
             {
-                temp *= 10;
-                temp += 10;
-                temp /= 10;
-            }
-            if (init.doorSouth == true && (a == "S" || a == "s"))
-            {
-                if (temp == 1)
+                if (init.doorWest == true)
                 {
                     temp *= 10;
-                    temp -= 21;
+                    temp -= 10;
                     temp /= 10;
                 }
                 else
-                {
-                    temp *= 10;
-                    temp -= 1;
-                    temp /= 10;
-                }
-            }
-            if (init.doorWest == true && (a == "W" || a == "w"))
-            {
-                temp *= 10;
-                temp -= 10;
-                temp /= 10;
+                    Console.WriteLine("there is no door to the west");
             }
             return temp;
+        }
+        static void battle(Player guy, Monster villin)
+        {
+            Console.WriteLine("(1) punch it in the face");
+            switch (guy.job)
+            {
+                case 1:
+                    Console.WriteLine("(2) hit it with your sword");
+                    break;
+                case 2:
+                    Console.WriteLine("(2) shoot it with your bow");
+                    break;
+                case 3:
+                    Console.WriteLine("(2) cast a spell at it");
+                    break;
+            }
+            if(guy.potion>0)
+                Console.WriteLine("(p) drink a potion");
+            Console.WriteLine("(run) run away");
+            string letsdo = Console.ReadLine().ToLower();
+            switch (letsdo)
+            {
+                case "1":
+                    Console.WriteLine("you punch it");
+                    break;
+                case "2":
+                    switch (guy.job)
+                    {
+                        case 1:
+                            Console.WriteLine("youve hit it with your sword");
+                            break;
+                        case 2:
+                            Console.WriteLine("(2) shoot it with your bow");
+                            break;
+                        case 3:
+                            Console.WriteLine("(2) cast a spell at it");
+                            break;
+                    }
+                    break;
+            }
         }
         static double action(Room init, Player guy)
         {
             double nextroom=init.location;
             int counter = 1;
-            if(init.monster == true) //to do
+            if (init.IsMonster == true && init.Mhere.knows == true) //doing
             {
-
+                Console.WriteLine("you prepare to attack");
+                battle(guy, init.Mhere);
+                if (guy.hp <= 0)
+                    return 9999;
             }
             else
             {
                 init.doors();
+                Console.WriteLine();
                 Console.WriteLine("what would you like to do?");
                 switch (init.location)
                 //showing options
                 {
                     case (-1.1):
-                        Console.WriteLine($"({counter++}) take sword");
-                        Console.WriteLine($"({counter++}) take bow");
-                        Console.WriteLine($"({counter++}) take staff");
+                        if (init.weaponSword == true)
+                            Console.WriteLine($"({counter++}) take sword");
+                        else
+                            counter++;
+                        if (init.weaponBow == true)
+                            Console.WriteLine($"({counter++}) take bow");
+                        else
+                            counter++;
+                        if (init.weaponStaff == true)
+                            Console.WriteLine($"({counter++}) take staff");
+                        else
+                            counter++;
                         Console.WriteLine($"({counter++}) look up");
                         opdoors(init);
                         break;
                     case (1):
+                        Console.WriteLine($"({counter++}) attack the skeleton");
                         opdoors(init);
                         break;
                     case (1.1):
@@ -254,6 +339,7 @@ namespace game1._3
                         break;
                 }
                 string letsdo = Console.ReadLine();
+                Console.Clear();
                 switch (init.location)
                 //picking options
                 {
@@ -288,6 +374,7 @@ namespace game1._3
                         switch (letsdo)
                         {
                             case "1":
+                                battle(guy, init.Mhere);
                                 break;
                             case "2":
                                 break;
