@@ -8,12 +8,17 @@ namespace game_1._4
 {
     class room
     {
+        public char SideDoor = '0';
+        static public int RoomNumber = 0;
+        public int ThisRoomNumber;
         public int hight { get; set; }
         public int width { get; set; }
         item Key;
+        public int LastDoor;
         char[,] reprezentation;
-        public room(string seed, player guy)
+        public room(string seed, player guy, bool NewRoom)
         {
+            ThisRoomNumber = RoomNumber++;
             Random ysize = new Random();
             Random xsize = new Random();
             switch (seed) //room type
@@ -33,10 +38,29 @@ namespace game_1._4
 
             }
             GenerateRoom();
+            if (NewRoom) //door was 1-top 2-botom 3-left 4-right
+            {
+                if (guy.ylocation == 0)
+                {
+                    LastDoor = 1;
+                    SideDoor = '1';
+                }
+                if (guy.xlocation == 0)
+                {
+                    LastDoor = 3;
+                    SideDoor = '3';
+                }
+
+                MakeDoor(LastDoor, true);
+            }
             Random StartLocation = new Random();
-            MoveChar(hight - StartLocation.Next(2, hight - 1), width - StartLocation.Next(2, width - 1), guy);
+            MoveChar(hight - StartLocation.Next(2, hight - 1), width - StartLocation.Next(2, width - 1), guy, NewRoom);
             Thread.Sleep(30);
             Key = new item { ylocation = hight - ysize.Next(2, hight - 1), xlocation = width - xsize.Next(2, width - 1), rep = '^' };
+            while(Key.ylocation==guy.ylocation || Key.xlocation == guy.xlocation)
+            {
+                Key = new item { ylocation = hight - ysize.Next(2, hight - 1), xlocation = width - xsize.Next(2, width - 1), rep = '^' };
+            }
             MoveChar(Key);
         }
         void GenerateRoom()
@@ -77,16 +101,32 @@ namespace game_1._4
                 Console.WriteLine(reprezentation[y, width-1]);
             }
         }
-        public void MoveChar(int y,int x,player p)
+        public void MoveChar(int y,int x,player p, bool NewRoom)
         {
-            if (reprezentation[y, x] != '*')
+            if (reprezentation[y, x] != '*' || NewRoom)
             {
                 if (reprezentation[y, x] == '^')
                 {
-                    MakeDoor(1, 1);
+                    MakeDoor((int)char.GetNumericValue(SideDoor),false);
                 }
-                reprezentation[p.ylocation, p.xlocation] = '-';//makes small bug, the next line is there to fix it
-                //reprezentation[0, 0] = '*';
+                try
+                {
+                    char temp = SideDoor;
+                    if (reprezentation[y, x] == '|')
+                        SideDoor = '|';
+                    if (SideDoor == '|')
+                    {
+                        reprezentation[p.ylocation, p.xlocation] = '|';
+                        SideDoor = temp;
+                    }
+                    else
+                        reprezentation[p.ylocation, p.xlocation] = '-';
+                }
+                catch
+                {
+
+                }
+                reprezentation[0, 0] = '*';//makes small bug, is there to fix it
                 reprezentation[y, x] = p.rep;
                 p.ylocation = y;
                 p.xlocation = x;
@@ -100,35 +140,42 @@ namespace game_1._4
         {
             reprezentation[y, x] = c;
         }
-        public void MakeDoor(int lastdoorY, int lastdoorX)
+        public void MakeDoor(int lastdoor ,bool olddoor)
         {
             int yline = 0, xline = 1;
             char DoorRep = '-';
             Random doorloction = new Random();
-            switch (doorloction.Next(5))
+            if (olddoor)
             {
-                case (1)://top line
-                    yline = 0;
-                    xline = doorloction.Next(1, width - 1);
-                    break;
-                case (2)://botom line
-                    yline = hight-1;
-                    xline = doorloction.Next(1, width - 1);
-                    break;
-                case (3)://left line
-                    xline = 0;
-                    yline = doorloction.Next(1, hight - 1);
-                    DoorRep = '|';
-                    break;
-                case (4)://right line
-                    xline = width - 1;
-                    yline = doorloction.Next(1, hight - 1);
-                    DoorRep = '|';
-                    break;
+
+            }
+            else
+            {
+
+                switch (doorloction.Next(5))
+                {
+                    case (1)://top line
+                        yline = 0;
+                        xline = doorloction.Next(1, width - 1);
+                        break;
+                    case (2)://botom line
+                        yline = hight - 1;
+                        xline = doorloction.Next(1, width - 1);
+                        break;
+                    case (3)://left line
+                        xline = 0;
+                        yline = doorloction.Next(1, hight - 1);
+                        DoorRep = '|';
+                        break;
+                    case (4)://right line
+                        xline = width - 1;
+                        yline = doorloction.Next(1, hight - 1);
+                        DoorRep = '|';
+                        break;
+                }
             }
             MoveChar(yline, xline, DoorRep);
         }
-        
 
     }
 }

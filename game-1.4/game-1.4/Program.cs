@@ -12,7 +12,7 @@ namespace game_1._4
         {
             List<room> maze = new List<room>();
             player guy = new player();
-            room MyRoom = new room(RoomSeed(), guy);
+            room MyRoom = new room(RoomSeed(), guy, false);
             Thread.Sleep(20);
             while (true)
             {
@@ -25,7 +25,14 @@ namespace game_1._4
                 catch(Exception e)
                 {
                     //maze.Add(MyRoom);
-                    MyRoom = NextRoom(guy);
+                    if (e.Message == "Index was outside the bounds of the array.")
+                        MyRoom = NextRoom(guy);
+                    else
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.ReadLine();
+                    }
+
                 }
             }
 
@@ -50,16 +57,16 @@ namespace game_1._4
             switch (action.Key)
             {
                 case (ConsoleKey.UpArrow):
-                    entrince.MoveChar(guy.ylocation - 1, guy.xlocation, guy);
+                    entrince.MoveChar(guy.ylocation - 1, guy.xlocation, guy, false);
                     break;
                 case (ConsoleKey.LeftArrow):
-                    entrince.MoveChar(guy.ylocation, guy.xlocation - 1, guy);
+                    entrince.MoveChar(guy.ylocation, guy.xlocation - 1, guy, false);
                     break;
                 case (ConsoleKey.DownArrow):
-                    entrince.MoveChar(guy.ylocation + 1, guy.xlocation, guy);
+                    entrince.MoveChar(guy.ylocation + 1, guy.xlocation, guy, false);
                     break;
                 case (ConsoleKey.RightArrow):
-                    entrince.MoveChar(guy.ylocation, guy.xlocation + 1, guy);
+                    entrince.MoveChar(guy.ylocation, guy.xlocation + 1, guy, false);
                     break;
                 default:
                     break;
@@ -67,8 +74,7 @@ namespace game_1._4
         }
         static room NextRoom(player p)
         {
-            Random rand = new Random();
-            room r = new room(RoomSeed(), p);
+            room r = new room(RoomSeed(), p, true);
             if (p.ylocation == 0)
             {
                 //r.MoveChar(r.hight - 1, r.width - rand.Next(2, r.width - 1), p);
