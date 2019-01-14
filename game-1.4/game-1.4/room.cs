@@ -89,7 +89,7 @@ namespace game_1._4
         {
             for(int y = 0; y < hight; y++)
             {
-                for(int x = 0; x < width-1; x++)
+                for(int x = 0; x < width - 1; x++)
                 {
                     if (reprezentation[y, x] == '@')
                         Console.ForegroundColor = ConsoleColor.Blue;
@@ -147,7 +147,31 @@ namespace game_1._4
             Random doorloction = new Random();
             if (olddoor)
             {
-
+                switch (SideDoor)
+                {
+                    case ('1'):
+                        yline = hight - 1;
+                        xline = doorloction.Next(1, width - 1);
+                        break;
+                        /*
+                    case ('2'):
+                        yline = hight - 1;
+                        xline = doorloction.Next(1, width - 1);
+                        break;
+                        */
+                    case ('3'):
+                        xline = width - 1;
+                        yline = doorloction.Next(1, hight - 1);
+                        DoorRep = '|';
+                        break;
+                        /*
+                    case ('4'):
+                        xline = width - 1;
+                        yline = doorloction.Next(1, hight - 1);
+                        DoorRep = '|';
+                        break;
+                        */
+                }
             }
             else
             {
